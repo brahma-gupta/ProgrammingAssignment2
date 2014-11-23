@@ -1,16 +1,50 @@
+## A pair of functions to calculate and cache the inverse of 
+## any given non singular square matrix
 
-## Put comments here that give an overall description of what your
-## functions do
-
-## A function to create a "matrix" object that can cache its inverse. 
+## Function to create a special list object to cache the 
+## given "matrix" and its inverse. 
 
 makeCacheMatrix <- function(x = matrix()) {
 
+        ## 'x' is a square non singular matrix of any size
+        ## 'i' is a variable to cache the inverse matrix
+  
+    i <- NULL
+    set <- function(y) {
+        x <<- y
+        i <<- NULL
+    }
+  
+    get <- function() x
+    setinverse <- function(inverse) i <<- inverse
+    getinverse <- function() i
+    list(set = set, get = get,
+        setinverse = setinverse,
+        getinverse = getinverse)
 }
 
 
-## Write a short comment describing this function
+## Function to compute the inverse of non singular square matrix. 
+## If the inverse has already been calculated (and the matrix
+## has not changed), then this function retrieves from the cache.
 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+
+        ## 'x' is a special matrix created by function 'makeCacheMatrix' 
+        ## ... are for named parameters for the 'solve' function
+
+        ## 'data' is a variable to hold the cached matrix object
+
+        ## 'i' is a matrix variable that holds the inverse
+        ## to be calculated
+        		
+    i <- x$getinverse()
+    if(!is.null(i)) {
+        message("getting cached data")
+        return(i)
+    }
+    data <- x$get()
+    i <- solve(data, ...)
+    x$setinverse(i)
+    i
 }
